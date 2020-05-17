@@ -1,0 +1,79 @@
+//Create Schema DDL
+CREATE SCHEMA `wargame` ;
+
+
+
+//Create Weapons Table
+CREATE TABLE IF NOT EXISTS `wargame`.`Weapons` (
+  `idWeapons` INT NOT NULL AUTO_INCREMENT,
+  `WName` VARCHAR(50) NOT NULL,
+  `Description` VARCHAR(200) NOT NULL,
+  `PowerValue` INT NOT NULL,
+  `Image` VARCHAR(50) NOT NULL,
+  `Price` DECIMAL(10) NOT NULL,
+  `Weaponscol` VARCHAR(45) NULL,
+  PRIMARY KEY (`idWeapons`))
+ENGINE = InnoDB;
+
+
+//Create Users Table
+
+CREATE TABLE IF NOT EXISTS `wargame`.`User` (
+  `idUser` INT NOT NULL AUTO_INCREMENT,
+  `FirstName` VARCHAR(45) NOT NULL,
+  `LastName` VARCHAR(45) NOT NULL,
+  `EmailAddress` VARCHAR(45) NOT NULL,
+  `CreditCard` INT NOT NULL,
+  
+  PRIMARY KEY (`idUser`),
+  
+ENGINE = InnoDB;
+
+//Create Shopping Cart
+
+CREATE TABLE IF NOT EXISTS `wargame`.`ShoppingCart` (
+  `idShoppingCart` INT NOT NULL,
+  `WeaponsObject` VARCHAR(100) NOT NULL,
+  `User_idUser` INT NOT NULL,
+  PRIMARY KEY (`idShoppingCart`),
+  INDEX `fk_ShoppingCart_User1_idx` (`User_idUser` ASC),
+  CONSTRAINT `fk_ShoppingCart_User1`
+    FOREIGN KEY (`User_idUser`)
+    REFERENCES `wargame`.`User` (`idUser`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+//Create Purchase History
+
+CREATE TABLE IF NOT EXISTS `wargame`.`PurchaseHistory` (
+  `idPurchaseHistory` INT NOT NULL,
+  `ShoppingCartObject` VARCHAR(100) NOT NULL,
+  `ShoppingCart_idShoppingCart` INT NOT NULL,
+  PRIMARY KEY (`idPurchaseHistory`),
+  INDEX `fk_PurchaseHistory_ShoppingCart1_idx` (`ShoppingCart_idShoppingCart` ASC),
+  CONSTRAINT `fk_PurchaseHistory_ShoppingCart1`
+    FOREIGN KEY (`ShoppingCart_idShoppingCart`)
+    REFERENCES `wargame`.`ShoppingCart` (`idShoppingCart`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+//Registration Users
+Insert Into wargame.user (`FirstName`,`LastName`,`EmailAddress`,`CreditCard`) Values ('Zachary','Swoveland','email@amn.com','123456789012');
+
+//Purchase Weapon
+Insert Into shoppingcart (WeaponImg,WeaponName,Price) Select wargame.weapons.Image,wargame.weapons.WName,wargame.weapons.Price from weapons;
+
+//Sent email address
+Select EmailAddress from user where purchaseHistory.Id = user.Id;
+
+//Search of multiple
+Select * from weapons where WName = userinput and Price <= #input and Description = '%userinput%';
+
+//Purchase History 
+Select * from purchaseHistory where purchaseHistory.Id = user.Id;
+
+
+
